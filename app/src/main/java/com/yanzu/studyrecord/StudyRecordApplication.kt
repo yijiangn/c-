@@ -10,12 +10,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class StudyRecordApplication : Application() {
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     val database by lazy { AppDatabase.get(this) }
     val repository by lazy { StudyRepository(database) }
     val backupManager by lazy { BackupManager(database) }
 
     override fun onCreate() {
         super.onCreate()
-        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch { repository.ensureSeeded() }
+        applicationScope.launch { runCatching { repository.ensureSeeded() } }
     }
 }
