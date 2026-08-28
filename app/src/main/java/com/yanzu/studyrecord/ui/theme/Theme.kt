@@ -1,6 +1,8 @@
 package com.yanzu.studyrecord.ui.theme
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -51,11 +53,18 @@ fun StudyRecordTheme(themeMode: String, content: @Composable () -> Unit) {
     val colors = if (dark) DarkColors else LightColors
     val view = LocalView.current
     if (!view.isInEditMode) SideEffect {
-        val window = (view.context as Activity).window
-        window.statusBarColor = Color.Transparent.toArgb()
-        window.navigationBarColor = Color.Transparent.toArgb()
-        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !dark
-        WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !dark
+        view.context.findActivity()?.window?.let { window ->
+            window.statusBarColor = Color.Transparent.toArgb()
+            window.navigationBarColor = Color.Transparent.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !dark
+            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !dark
+        }
     }
     MaterialTheme(colorScheme = colors, content = content)
+}
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
