@@ -30,6 +30,12 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
+      - name: Preserve debug signing key
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: studyrecord-debug-keystore-v1
+
       - name: Run unit tests and build APK
         run: ./gradlew --no-daemon testDebugUnitTest assembleDebug
 
