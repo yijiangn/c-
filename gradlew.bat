@@ -4,6 +4,7 @@ setlocal
 set DIRNAME=%~dp0
 if "%DIRNAME%"=="" set DIRNAME=.
 set APP_HOME=%DIRNAME%
+if not exist "%APP_HOME%\gradle\wrapper\gradle-wrapper.jar" if exist "%APP_HOME%\gradle\wrapper\gradle-wrapper.jar.b64" powershell -NoProfile -Command "[IO.File]::WriteAllBytes('%APP_HOME%\gradle\wrapper\gradle-wrapper.jar',[Convert]::FromBase64String([IO.File]::ReadAllText('%APP_HOME%\gradle\wrapper\gradle-wrapper.jar.b64')))"
 if defined JAVA_HOME goto findJavaFromJavaHome
 set JAVA_EXE=java.exe
 %JAVA_EXE% -version >NUL 2>&1
